@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.WishMapper">
+  
+  	<!-- 나만의 음료 중복 확인 -->
+	  <select id ="wishDupCheck" resultType="int">
+	  	SELECT COUNT(*) FROM wish
+	  	WHERE member_id = #{memberId}
+	  	AND menu_num = #{menuNum}
+	  
+	  </select>
+	  
+	  <!-- 나만의 음료  -->
+	  <insert id="wish">
+	  	INSERT INTO wish (member_id, menu_num, reg_date)
+	  	VALUES (#{memberId}, #{menuNum},  #{regDate})
+	  </insert>
+	  
+	  <!-- 나만의 음료 갯수  -->
+  		<select id ="getCountWishById" resultType="int">
+  			SELECT COUNT(*) FROM wish
+  			WHERE member_id = #{memberId}
+  			
+  		</select>	
+  		
+  		<!-- 나만의 음료  리스트 가져오기  -->
+  		<select id ="getWishList" resultType="menuVo">
+  			SELECT * FROM menu
+  			WHERE num in (
+  				SELECT menu_num from wish
+  				WHERE member_id = #{memberId}  			
+  				)
+  		</select>
+  		
+  		<!-- 나만의 음료 삭제하기 -->
+  			<delete id="deleteWish">
+  				DELETE FROM wish
+  				WHERE member_id = #{memberId}
+  				AND menu_num = #{menuNum}
+  			</delete>
+  			
+  		<select id="getWishVo" resultType="wishVo">
+  			SELECT * FROM wish ORDER BY num
+  		</select>	
+  			
+  </mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.mapper.StoreMapper">
+	
+	<insert id="insertStore">
+		INSERT INTO store (store_img, store_name, store_address, store_tel, store_time, store_service, reg_date, area)
+		VALUES (#{storeImg}, #{storeName}, #{storeAddress}, #{storeTel}, #{storeTime}, #{storeService}, #{regDate}, #{area})
+	</insert>
+	
+	
+	<select id="getCountBySearch" resultType="int">
+		SELECT COUNT(*)
+		FROM store
+		<if test="category =='all'">
+		WHERE store_name LIKE CONCAT('%', #{search}, '%') OR
+		 	store_address LIKE CONCAT('%',#{search}, '%')	OR
+			area LIKE CONCAT('%', #{search}, '%')	
+		</if>	
+		<if test="category == 'area'">
+			WHERE area LIKE CONCAT('%', #{search}, '%')	
+		</if>	
+	</select>
+	
+	<select id ="getStoresBySearch" resultType="storeVo">
+		SELECT *
+		FROM store
+		<if test="category =='all'">
+		WHERE store_name LIKE CONCAT('%', #{search}, '%') OR
+		 	store_address LIKE CONCAT('%',#{search}, '%')	OR
+			area LIKE CONCAT('%', #{search}, '%')	
+		</if>
+		<if test="category == 'area'">
+			WHERE area LIKE CONCAT('%', #{search}, '%')	
+		</if>
+		ORDER BY num DESC 
+		LIMIT #{startRow}, #{pageSize}
+	</select>
+	
+</mapper>

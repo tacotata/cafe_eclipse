@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.mapper.MenuMapper">
+	<!--메뉴 등록하기  -->
+	<insert id="insertMenu">
+		INSERT INTO menu (item_img, sort, item_nameKo, item_nameEn, item_kcal, item_fat, item_protein, item_salt, item_sugar, item_caffeine, item_des, order_count, price)
+		VALUES (#{itemImg}, #{sort}, #{itemNameKo}, #{itemNameEn}, #{itemKcal}, #{itemFat}, #{itemProtein}, #{itemSalt}, #{itemSugar}, #{itemCaffeine}, #{itemDes}, #{orderCount},#{price})
+	</insert>
+	
+	
+	<select id="getCountBySearch" resultType="int">
+		SELECT COUNT(*) FROM menu
+		<if test ="category == 'itemNameKo'">
+			WHERE itemNameKo LIKE CONCAT('%', #{search}, '%')
+		</if>
+		<if test ="category == 'itemNameEn'">
+			WHERE itemNameEn LIKE CONCAT('%', #{search}, '%')
+		</if>
+		<if test ="category == 'sort'">
+			WHERE sort LIKE CONCAT('%', #{search}, '%')
+		</if>
+	</select>
+	
+	<select id="getListBySearch" resultType="menuVo">
+		SELECT * FROM menu
+		<if test ="category == 'itemNameKo'">
+			WHERE itemNameKo LIKE CONCAT('%', #{search}, '%')
+		</if>
+		<if test ="category == 'itemNameEn'">
+			WHERE itemNameEn LIKE CONCAT('%', #{search}, '%')
+		</if>
+		<if test ="category == 'sort'">
+			WHERE sort LIKE CONCAT('%', #{search}, '%')
+		</if>
+	
+	
+	</select>
+	
+	<select id="getBestMenus" resultType="menuVo">
+		SELECT * FROM menu
+		ORDER BY order_count DESC
+		LIMIT 5
+	</select>
+	
+	<select id="getCountByNewMenus" resultType="int">
+		SELECT COUNT(*) FROM menu
+		ORDER By num DESC
+	</select>
+	
+	<select id="getListByNewMenus" resultType="menuVo">
+		SELECT * FROM menu 
+		ORDER By num DESC 
+		LIMIT 3 
+	</select>
+	
+</mapper>

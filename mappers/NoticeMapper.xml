@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.NoticeMapper">
+
+	<insert id = "addNotice">
+			INSERT INTO notice (id, subject, content, reg_date, update_date) 
+			VALUES (#{id}, #{subject}, #{content}, #{regDate}, #{updateDate})
+	</insert>
+	
+	<select id ="getCountAll" resultType="int">
+		SELECT COUNT(*) FROM notice	
+	</select>
+	
+	<update id = "updateBoard" parameterType="noticeVo">
+		UPDATE notice
+		SET subject = #{subject}, content= #{content}, update_date = now()
+		WHERE num = #{num}
+	</update>
+	
+	<select id="getNotices" resultType="noticeVo">
+		SELECT *
+		FROM notice
+		ORDER BY re_Ref DESC, re_seq ASC
+		LIMIT #{startRow}, #{pageSize} 
+	</select>
+	
+	<select id="getCountBySearch" resultType="int">
+		SELECT COUNT(*)
+		FROM notice
+		WHERE subject LIKE CONCAT('%', #{search}, '%') OR
+		 	content LIKE CONCAT('%',#{search}, '%')	OR
+			id LIKE CONCAT('%', #{search}, '%')	
+	</select>
+	
+	<select id ="getNoticesBySearch" resultType="noticeVo">
+		SELECT *
+		FROM notice
+		<if test="category == 'all'">
+		WHERE subject LIKE CONCAT('%', #{search}, '%') OR
+		 	content LIKE CONCAT('%',#{search}, '%')	
+		</if>	
+		ORDER BY num DESC
+		LIMIT #{startRow}, #{pageSize} 
+	</select>
+	
+	<select id="getNoticesByNums" resultType="noticeVo">
+		SELECT *
+		FROM notice
+		WHERE num IN
+		<foreach collection="numlist" item="num" open="(" separator="," close=")">
+			#{num}
+		</foreach>
+	</select>
+	
+</mapper>

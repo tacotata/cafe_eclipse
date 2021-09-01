@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.CartMapper">
+  
+	<!-- 카트 등록 -->  
+  	<insert id="cart">
+		INSERT INTO cart (member_id, menu_num, amount)
+		VALUES (#{memberId}, #{menuNum}), #{amount})  	
+  	</insert>
+  
+  	<select id="getCartList" resultType="menuVo">
+  		SELECT * FROM menu
+  		WHERE num in (
+  				SELECT menu_num from cart
+  				WHERE member_id = #{memberId}  	)
+  	</select>
+  	
+  	<select id ="cartDupCheck" resultType= "int">
+  		SELECT COUNT(*) FROM cart
+  		WHERE member_id = #{memberId}
+  		AND menu_num = #{menuNum}
+ 	</select>
+  
+  	<select id = "getCountCartById" resultType="int">
+  		SELECT COUNT(*) FROM cart
+  		WHERE member_id = #{memberId}
+  	</select>
+  	
+  	<delete id="deleteCart">
+  		DELETE FROM cart 
+  		WHERE member_id =#{memberId}
+  		AND menu_num = #{menuNum}
+  	</delete>
+  	
+  	
+  
+  </mapper>
